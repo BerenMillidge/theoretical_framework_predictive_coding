@@ -3,7 +3,7 @@ import torch
 import numpy as np
 
 def cosine_similarity(x1,x2):
-    angle = (torch.dot(x1,x2) / (torch.norm(x1,2) * torch.norm(x2,2)))
+    angle = torch.dot(x1,x2) / (torch.norm(x1,2) * torch.norm(x2,2))
     return angle.item()
   #return torch.acos(angle).item()
 
