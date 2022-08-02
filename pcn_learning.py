@@ -257,44 +257,70 @@ class PC_Net2_GPU(object):
         print(self.pc_layers[i].dparams[n])
   
 
-  def gradient_infer(self, inp, label,loss_fn, loss_fn_str = "mse", store_errors = False):
-    with torch.no_grad():
-      inp = inp.to(self.device)
-      label = label.to(self.device)
-      out = self.forward(inp)
-      es = [[] for l in range(len(self.pc_layers)+1)]
-      dparamss = [torch.zeros(1) for i in range(len(self.pc_layers))]
+  def gradient_infer(self, inp, label,loss_fn, loss_fn_str = "mse", store_errors = False, track_reconf_loss = False):
+    inp = inp.to(self.device)
+    label = label.to(self.device)
+    out = self.forward(inp)
+    es = [[] for l in range(len(self.pc_layers)+1)]
+    dparamss = [torch.zeros(1) for i in range(len(self.pc_layers))]
+    loss, dl = taf.vjp(lambda out: loss_fn(out, label),out,torch.tensor(1).to(self.device))
+    #print("loss: ", loss)
+    begin_loss = deepcopy(loss)
+    begin_F = deepcopy(begin_loss).item()
+    loss_diff = 0
+    diff_F = 0
+    es[-1] = deepcopy(dl)
+    #print("INIT LOSS: ", dl)
+    es[0] = torch.zeros(1)
+    if store_errors:
+      errorlist = []
+    for i in range(self.N_reconf_steps):
+      for l in reversed(range(len(self.pc_layers)-1)):
+        # compute prediction errors
+        es[l+1] = -self.pc_layers[l+1].x + self.pc_layers[l].forward(self.pc_layers[l].x)
+        #print(es[l+1])
+        # compute gradient and update
+        dx, dparams = self.pc_layers[l+1].backward(es[l+2])
+        dparamss[l+1] = deepcopy(dparams)
+        self.pc_layers[l+1].x += self.mu_dt * (es[l+1] - dx)
+      dx, dparams = self.pc_layers[0].backward(es[1])
+      #dparamss[l] = deepcopy(dparams)
+      dparamss[0] = deepcopy(dparams)
+      out = self.pc_layers[-1].forward(self.pc_layers[-1].x)
       loss, dl = taf.vjp(lambda out: loss_fn(out, label),out,torch.tensor(1).to(self.device))
       es[-1] = deepcopy(dl)
-      es[0] = torch.zeros(1)
+      #print("output error: ", es[-1])
+      if self.use_PPC:
+        self.dws = dparamss
+        self.step()
       if store_errors:
-        errorlist = []
-      for i in range(self.N_reconf_steps):
-        for l in reversed(range(len(self.pc_layers)-1)):
-          # compute prediction errors
-          es[l+1] = -self.pc_layers[l+1].x + self.pc_layers[l].forward(self.pc_layers[l].x)
-          # compute gradient and update
-          dx, dparams = self.pc_layers[l+1].backward(es[l+2])
-          dparamss[l+1] = deepcopy(dparams)
-          self.pc_layers[l+1].x += self.mu_dt * (es[l+1] - dx)
-        dx, dparams = self.pc_layers[0].backward(es[1])
-        #dparamss[l] = deepcopy(dparams)
-        dparamss[0] = deepcopy(dparams)
-        out = self.pc_layers[-1].forward(self.pc_layers[-1].x)
-        loss, dl = taf.vjp(lambda out: loss_fn(out, label),out,torch.tensor(1).to(self.device))
-        es[-1] = deepcopy(dl)
-        if self.use_PPC:
-          self.dws = dparamss
-          self.step()
-        if store_errors:
-          es_tilde = deepcopy(es)
-          output_pred = self.pc_layers[-1].forward(self.pc_layers[-1].x) 
-          out_error = output_pred - label 
-          errorlist.append(deepcopy(es_tilde))
-      self.dws = dparamss
-      if store_errors:
-        return es, dparamss, errorlist
-      return es,dparamss
+        es_tilde = deepcopy(es)
+        predicted_out = self.pc_layers[-1].forward(self.pc_layers[-1].x)
+        loss, dl_2 = taf.vjp(lambda out: loss_fn(predicted_out, label),out,torch.tensor(1).to(self.device))
+        #print(len(es_tilde))
+        #es_tilde[-1] = deepcopy(dl_2)
+        #print("estilde: ", es_tilde)
+        #output_pred = self.pc_layers[-1].forward(self.pc_layers[-1].x) 
+        #print("output pred:", output_pred.shape)
+        #print("label:shape ", label.shape)
+        #onehot_label = F.one_hot(label, num_classes=10)
+        #out_error = output_pred - onehot_label 
+        end_F = 0
+        for e in es:
+          end_F += torch.sum(torch.square(e)).item()
+        diff_F = end_F - begin_F
+        errorlist.append(deepcopy(es_tilde))
+    self.dws = dparamss
+    if track_reconf_loss:
+      predicted_out = self.pc_layers[-1].forward(self.pc_layers[-1].x)
+      loss, dl = taf.vjp(lambda out: loss_fn(predicted_out, label),out,torch.tensor(1).to(self.device))
+      end_loss = deepcopy(loss)
+      loss_diff = end_loss - begin_loss
+
+
+    if store_errors:
+      return es, dparamss, errorlist, loss_diff, diff_F
+    return es,dparamss
 
   def get_len_params(self):
     total = 0
@@ -528,7 +554,6 @@ def run_experiment(input_size, hidden_sizes, output_size, epochs = 15,batch_size
         
             # Training pass
             optimizer.zero_grad()
-                    #with torch.no_grad():
             output = pcnet.forward(images)
             loss = criterion(output, labels)
             #print("loss: ", loss.item())
