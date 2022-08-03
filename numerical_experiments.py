@@ -40,10 +40,10 @@ def verify_linear_equilibrium(dimension=5, var=1, weight_var = 0.05, learning_ra
     diffs_from_eq = np.array(diffs_from_eq)[:,:,0]
     total_diffs_from_eq = np.sum(np.square(diffs_from_eq), axis=1)
     if plot_graphs:
-        plot_line_graph(Fs, title="Free Energy of the Network", xlabel="Timestep", ylabel="Free Energy",label="Free-Energy",sname="figures/verify_linear_equilibrium_Fs")
-        plot_equilibrium_graph(x2s,pred_eq.numpy()[:,0], title="Activities Converging to Linear Equilibrium",xlabel="Timestep", ylabel="Activity Value",sname="figures/verify_linear_equilibrium_activities",label="Activity Value")
-        plot_line_graph(diffs_from_eq, title="Difference of activities from Linear Equilibrium", xlabel="Timestep",ylabel="Euclidean Distance",sname="figures/verify_linear_equilibrium_diffs")
-        plot_line_graph(total_diffs_from_eq, title="Total Euclidean Distance from Equilibrium", xlabel="Timestep",ylabel="Euclidean Distance",label="Distance",sname="figures/verify_linear_equilibrium_total_diffs",divergence_graph=True)
+        plot_line_graph(Fs, title="Free energy of the network", xlabel="Timestep", ylabel="Free energy",label="Free-energy",sname="figures/verify_linear_equilibrium_Fs")
+        plot_equilibrium_graph(x2s,pred_eq.numpy()[:,0], title="Activities converging to linear equilibrium",xlabel="Timestep", ylabel="Activity value",sname="figures/verify_linear_equilibrium_activities",label="Activity Value")
+        plot_line_graph(diffs_from_eq, title="Difference of activities from linear equilibrium", xlabel="Timestep",ylabel="Euclidean distance",sname="figures/verify_linear_equilibrium_diffs")
+        plot_line_graph(total_diffs_from_eq, title="Total euclidean distance from equilibrium", xlabel="Timestep",ylabel="Euclidean distance",label="Distance",sname="figures/verify_linear_equilibrium_total_diffs",divergence_graph=True)
     return total_diffs_from_eq
 
 def multiple_networks_linear_eq_convergence(N_networks = 50,dimension = 5, var=1, weight_var = 0.05, learning_rate = 0.1, dim=5):
@@ -53,7 +53,7 @@ def multiple_networks_linear_eq_convergence(N_networks = 50,dimension = 5, var=1
         total_diffs.append(np.array(total_diffs_from_eq))
     mean_total_diffs = np.mean(total_diffs, axis=0)
     std_total_diffs = np.std(total_diffs, axis=0) #/ np.sqrt(N_networks)
-    plot_line_graph(mean_total_diffs, stds=std_total_diffs, title="Average Distance from Linear Equilibrium", xlabel="Timestep", ylabel="Mean Euclidean Distance", sname="figures/average_linear_equilibrium_diffs")
+    plot_line_graph(mean_total_diffs, stds=std_total_diffs, title="Average distance from linear equilibrium", xlabel="Timestep", ylabel="Mean euclidean distance", sname="figures/average_linear_equilibrium_diffs")
     
 
 
@@ -88,13 +88,13 @@ def input_unconstrained_linear(dimension=5, var=1, weight_var = 1, learning_rate
             x2s.append(deepcopy(x2.numpy()))
             diffs.append(deepcopy(x2.numpy() - TP_x2.numpy()))
 
-    plot_line_graph(Fs, title="Free Energy of the Network", xlabel="Timestep", ylabel="Free Energy",label="Free-Energy",sname="figures/input_unconstrained_linear_Fs")
+    plot_line_graph(Fs, title="Free energy of the network", xlabel="Timestep", ylabel="Free energy",label="Free-energy",sname="figures/input_unconstrained_linear_Fs")
     x2s = np.array(x2s)[:,:,0]
-    plot_equilibrium_graph(x2s,TP_x2[:,0].numpy(), title="Activities Converging to Input-Unconstrained Equilibrium",xlabel="Timestep", ylabel="Activity Value",sname="figures/input_unconstrained_linear_activities")
+    plot_equilibrium_graph(x2s,TP_x2[:,0].numpy(), title="Activities converging to input-unconstrained equilibrium",xlabel="Timestep", ylabel="Activity value",sname="figures/input_unconstrained_linear_activities")
     diffs = np.array(diffs)[:,:,0]
-    plot_line_graph(diffs, title="Difference Between Activities and TP Targets", xlabel="Timestep", ylabel="Activity Difference",sname="figures/input_unconstrained_linear_diffs")
+    plot_line_graph(diffs, title="Difference between activities and TP targets", xlabel="Timestep", ylabel="Activity difference",sname="figures/input_unconstrained_linear_diffs")
     euclid_dists = np.mean(np.square(diffs),axis=1)
-    plot_line_graph(euclid_dists, title="Mean Euclidean Distance from TP Targets", xlabel="Timestep", ylabel="Mean Distance from targets",label="Mean Distance",sname="figures/input_unconstrained_linear_total_diffs",divergence_graph=True)
+    plot_line_graph(euclid_dists, title="Mean euclidean distance from TP targets", xlabel="Timestep", ylabel="Mean distance from targets",label="Mean distance",sname="figures/input_unconstrained_linear_total_diffs",divergence_graph=True)
 
 def multi_layer_input_unconstrained_linear(n_dimension = 2,N_layers = 5, var=1, weight_var = 1,learning_rate = 0.05,N_steps = 2000, plot_results = True):
     if type(n_dimension) != list:
@@ -144,9 +144,9 @@ def multi_layer_input_unconstrained_linear(n_dimension = 2,N_layers = 5, var=1, 
     labels = ["Layer " + str(i+1) for i in range(N_layers)]
     if plot_results:
         # free energy graph
-        plot_line_graph(Fs, title="Free Energy of the Network", xlabel="Timestep", ylabel="Free Energy",label="Free-Energy",sname="figures/multilayer_input_unconstrained_linear_Fs_3")
+        plot_line_graph(Fs, title="free energy of the network", xlabel="Timestep", ylabel="Free energy",label="Free-energy",sname="figures/multilayer_input_unconstrained_linear_Fs_3")
         # average diffs graph
-        plot_line_graphs(diffs, title="Convergence of each layer to Target-Prop Targets", xlabel="Timestep", ylabel="Average distance to local target", labels=labels, sname="figures/multilayer_input_unconstrained_linear_diffs_3")
+        plot_line_graphs(diffs, title="Convergence of each layer to target-Prop targets", xlabel="Timestep", ylabel="Average distance to local target", labels=labels, sname="figures/multilayer_input_unconstrained_linear_diffs_3")
     return xss, Fs, diffs
 
 def multi_trial_input_unconstrained(N_trials = 200, use_nonlinear=False):
@@ -166,7 +166,7 @@ def multi_trial_input_unconstrained(N_trials = 200, use_nonlinear=False):
     N_layers = 5
     labels = ["Layer " + str(i+1) for i in range(N_layers)]
     linear_str = "nonlinear" if use_nonlinear else "linear"
-    plot_line_graphs(means, title="Convergence of each layer to Target-Prop Targets", xlabel="Timestep", ylabel="Average distance to local target", labels=labels, stds = stds, sname="figures/avg_seeds_multilayer_input_unconstrained_" + str(linear_str) + "_diffs_100_2.png")
+    plot_line_graphs(means, title="Convergence of each layer to target-prop targets", xlabel="Timestep", ylabel="Average distance to local target", labels=labels, stds = stds, sname="figures/avg_seeds_multilayer_input_unconstrained_" + str(linear_str) + "_diffs_100_2.png")
 
 def input_unconstrained_nonlinear(learning_rate = 0.05, weight_var = 0.9, activity_var = 1, dim = 5, output_dim = 5):
     x1 = torch.tensor(np.random.normal(1,activity_var,(dim,1)))
@@ -199,13 +199,13 @@ def input_unconstrained_nonlinear(learning_rate = 0.05, weight_var = 0.9, activi
             x2s.append(deepcopy(x2.numpy()))
             diffs.append(deepcopy(x2.numpy() - TP_x2.numpy()))
 
-    plot_line_graph(Fs, title="Free Energy of the Network", xlabel="Timestep", ylabel="Free Energy",label="Free-Energy",sname="figures/input_unconstrained_nonlinear_Fs_2")
+    plot_line_graph(Fs, title="Free energy of the network", xlabel="Timestep", ylabel="Free energy",label="Free-energy",sname="figures/input_unconstrained_nonlinear_Fs_2")
     x2s = np.array(x2s)[:,:,0]
-    plot_equilibrium_graph(x2s, TP_x2[:,0].numpy(), title="Activities Converging to Input-Unconstrained Equilibrium",xlabel="Timestep", ylabel="Activity Value",sname="figures/input_unconstrained_nonlinear_activities_2")
+    plot_equilibrium_graph(x2s, TP_x2[:,0].numpy(), title="Activities converging to input-unconstrained equilibrium",xlabel="Timestep", ylabel="Activity balue",sname="figures/input_unconstrained_nonlinear_activities_2")
     diffs = np.array(diffs)[:,:,0]
-    plot_line_graph(diffs, title="Difference Between Activities and Target-Prop Targets", xlabel="Timestep", ylabel="Activity Difference",sname="figures/input_unconstrained_nonlinear_diffs_2")
+    plot_line_graph(diffs, title="Difference between activities and target-prop targets", xlabel="Timestep", ylabel="Activity difference",sname="figures/input_unconstrained_nonlinear_diffs_2")
     euclid_dists = np.mean(np.square(diffs),axis=1)
-    plot_line_graph(euclid_dists, title="Mean Euclidean Distance From Target-Prop Targets", xlabel="Timestep", ylabel="Mean Distance from targets",label="Mean Distance",sname="figures/input_unconstrained_nonlinear_mean_diffs_2",divergence_graph=True)
+    plot_line_graph(euclid_dists, title="Mean euclidean distance from target-prop targets", xlabel="Timestep", ylabel="Mean distance from targets",label="Mean distance",sname="figures/input_unconstrained_nonlinear_mean_diffs_2",divergence_graph=True)
     return xss, Fs, diffs
 
 def precision_equilibrium_check(pi2_scale=1, pi2_var=0.1, pi3_scale=1, pi3_var = 0.1,learning_rate = 0.1, activity_var = 1, weight_var = 0.01, dim=5, plot_graphs = True):
@@ -239,10 +239,10 @@ def precision_equilibrium_check(pi2_scale=1, pi2_var=0.1, pi3_scale=1, pi3_var =
     diffs = np.array(diffs)[:,:,0]
     total_diffs_from_eq = np.sum(np.square(diffs), axis=1)
     if plot_graphs:
-        plot_line_graph(Fs, title="Free Energy of the Network", xlabel="Timestep", ylabel="Free Energy",label="Free-Energy",sname="figures/check_precision_equilibrium_Fs")
-        plot_equilibrium_graph(x2s,pred_eq, title="Activities Converging to Precision Equilibrium",xlabel="Timestep", ylabel="Activity Value",sname="figures/check_precision_equilibrium_activities")
-        plot_line_graph(diffs, title="Difference of activities from Precision Equilibrium", xlabel="Timestep",ylabel="Activity Value",sname="figures/check_precision_equilibrium_diffs")
-        plot_line_graph(total_diffs_from_eq, title="Total Euclidean Distance from  Precision Equilibrium", xlabel="Timestep",ylabel="Euclidean Distance",label="Distance",sname="figures/check_precision_equilibrium_total_diffs",divergence_graph=True)
+        plot_line_graph(Fs, title="Free energy of the network", xlabel="Timestep", ylabel="Free energy",label="Free-energy",sname="figures/check_precision_equilibrium_Fs")
+        plot_equilibrium_graph(x2s,pred_eq, title="Activities converging to precision equilibrium",xlabel="Timestep", ylabel="Activity value",sname="figures/check_precision_equilibrium_activities")
+        plot_line_graph(diffs, title="Difference of activities from precision equilibrium", xlabel="Timestep",ylabel="Activity value",sname="figures/check_precision_equilibrium_diffs")
+        plot_line_graph(total_diffs_from_eq, title="Total euclidean distance from  precision equilibrium", xlabel="Timestep",ylabel="Euclidean distance",label="distance",sname="figures/check_precision_equilibrium_total_diffs",divergence_graph=True)
     return total_diffs_from_eq
 
 def multiple_networks_precision_eq_convergence(N_networks = 50, var=1, weight_var = 0.05, learning_rate = 0.1, dim=5):
@@ -252,7 +252,7 @@ def multiple_networks_precision_eq_convergence(N_networks = 50, var=1, weight_va
         total_diffs.append(np.array(total_diffs_from_eq))
     mean_total_diffs = np.mean(total_diffs, axis=0)
     std_total_diffs = np.std(total_diffs, axis=0) #/ np.sqrt(N_networks)
-    plot_line_graph(mean_total_diffs, stds=std_total_diffs, title="Average Distance from Precision Equilibrium", xlabel="Timestep", ylabel="Mean Euclidean Distance", sname="figures/average_precision_equilibrium_diffs")
+    plot_line_graph(mean_total_diffs, stds=std_total_diffs, title="Average distance from precision equilibrium", xlabel="Timestep", ylabel="Mean euclidean distance", sname="figures/average_precision_equilibrium_diffs")
     
 
 
@@ -286,14 +286,14 @@ def low_precision_ratio_BP(pi2_scale=10, pi2_var=1, pi3_scale=1, pi3_var = 1,lea
             e2s.append(deepcopy(e2.numpy()))
             BP_diffs.append(e2.numpy() - BP_e2s.numpy())
 
-    plot_line_graph(Fs, title="Free Energy of the Network", xlabel="Timestep", ylabel="Free Energy",label="Free-Energy",sname="figures/low_precision_ratio_Fs")
+    plot_line_graph(Fs, title="free energy of the network", xlabel="Timestep", ylabel="Free energy",label="Free-energy",sname="figures/low_precision_ratio_Fs")
     x2s = np.array(x2s)[:,:,0]
-    plot_equilibrium_graph(x2s,pred_eq, title="Activities Converging to Precision Equilibrium",xlabel="Timestep", ylabel="Activity Value",sname="figures/low_precision_ratio_activities")
+    plot_equilibrium_graph(x2s,pred_eq, title="Activities converging to precision equilibrium",xlabel="Timestep", ylabel="Activity value",sname="figures/low_precision_ratio_activities")
     diffs = np.array(BP_diffs)[:,:,0]
-    plot_line_graph(diffs, title="Difference of Prediction Errors from Backprop", xlabel="Timestep",ylabel="Prediction Error",sname="figures/low_precision_ratio_diffs")
+    plot_line_graph(diffs, title="Difference of prediction errors from backprop", xlabel="Timestep",ylabel="Prediction error",sname="figures/low_precision_ratio_diffs")
 
     total_diffs = np.sum(np.square(diffs), axis=1)
-    plot_line_graph(total_diffs, title="Total Euclidean Distance from Backprop Gradients", xlabel="Timestep",ylabel="Euclidean Distance",label="Distance",sname="figures/low_precision_ratio_total_diffs",divergence_graph=True)
+    plot_line_graph(total_diffs, title="Total euclidean distance from backprop gradients", xlabel="Timestep",ylabel="Euclidean distance",label="Distance",sname="figures/low_precision_ratio_total_diffs",divergence_graph=True)
 
 
 def high_precision_ratio_TP(learning_rate = 0.1, activity_var = 1, weight_var = 0.05, dim=5):
@@ -326,11 +326,11 @@ def high_precision_ratio_TP(learning_rate = 0.1, activity_var = 1, weight_var = 
             x2 -= learning_rate * (e2 - W2.T @ e3)
             Fs.append(torch.sum(torch.square(e2)) + torch.sum(torch.square(e3)))
 
-    plot_line_graph(Fs, title="Free Energy of the Network", xlabel="Timestep", ylabel="Free Energy",label="Free-Energy",sname="figures/high_precision_ratio_Fs")
+    plot_line_graph(Fs, title="Free energy of the network", xlabel="Timestep", ylabel="Free energy",label="Free-energy",sname="figures/high_precision_ratio_Fs")
     x2s = np.array(x2s)[:,:,0]
-    plot_equilibrium_graph(x2s,pred_eq, title="Activities Converging to Precision Equilibrium",xlabel="Timestep", ylabel="Activity Value",sname="figures/high_precision_ratio_activities")
-    plot_line_graph(FP_angles, title="Angle to Initial Forward Pass During Convergence to Equilibrium", xlabel="Timestep", ylabel="Cosine Similarity",label="Similarity to Forward Pass",sname="figures/high_precision_ratio_FP_angles")
-    plot_line_graph(TP_angles, title="Angle to Target-Prop Targets During Convergence to Equilibrium", xlabel="Timestep", ylabel="Cosine Similarity",label="Similarity to Target",sname="figures/high_precision_ratio_TP_angles")
+    plot_equilibrium_graph(x2s,pred_eq, title="Activities converging to precision equilibrium",xlabel="Timestep", ylabel="Activity value",sname="figures/high_precision_ratio_activities")
+    plot_line_graph(FP_angles, title="Angle to initial forward pass during convergence to equilibrium", xlabel="Timestep", ylabel="Cosine similarity",label="Similarity to forward pass",sname="figures/high_precision_ratio_FP_angles")
+    plot_line_graph(TP_angles, title="Angle to target-prop targets during convergence to equilibrium", xlabel="Timestep", ylabel="Cosine similarity",label="Similarity to target",sname="figures/high_precision_ratio_TP_angles")
 
 
 
@@ -385,8 +385,8 @@ def precision_ratio_correlation(N_trials, precision_ratios, pi2_var=0.1, pi3_sca
             #diffs = np.array(BP_diffs)[:,:,0]
             #total_diffs = np.sum(np.square(diffs), axis=1)
             if individual_plot_graphs:
-                plot_line_graph(Fs, title="Free Energy of the Network", xlabel="Timestep", ylabel="Free Energy",label="Free-Energy",sname="figures/low_precision_ratio_Fs")
-                plot_equilibrium_graph(x2s,pred_eq, title="Activities Converging to Precision Equilibrium",xlabel="Timestep", ylabel="Activity Value",sname="figures/low_precision_ratio_activities")
+                plot_line_graph(Fs, title="Free energy of the network", xlabel="Timestep", ylabel="Free energy",label="Free-energy",sname="figures/low_precision_ratio_Fs")
+                plot_equilibrium_graph(x2s,pred_eq, title="Activities converging to precision equilibrium",xlabel="Timestep", ylabel="Activity value",sname="figures/low_precision_ratio_activities")
                 #plot_line_graph(diffs, title="Difference of Prediction Errors from Backprop", xlabel="Timestep",ylabel="Prediction Error",sname="figures/low_precision_ratio_diffs")
                 #plot_line_graph(total_diffs, title="Total Euclidean Distance from Backprop Gradients", xlabel="Timestep",ylabel="Euclidean Distance",label="Distance",sname="figures/low_precision_ratio_total_diffs",divergence_graph=True)
             BP_angle_list.append(np.array(BP_angles))
@@ -420,9 +420,9 @@ def precision_ratio_correlation(N_trials, precision_ratios, pi2_var=0.1, pi3_sca
     plt.plot(precision_ratios[start_idx:], mean_final_BP[start_idx:], label="Similarity to backprop gradients")
     plt.fill_between(precision_ratios[start_idx:], mean_final_BP[start_idx:]- std_final_BP[start_idx:], mean_final_BP[start_idx:]+ std_final_BP[start_idx:], alpha=0.5)
     sns.despine(left=False,top=True, right=True, bottom=False)
-    plt.xlabel("Precision Ratio",fontsize=24)
+    plt.xlabel("Precision ratio",fontsize=24)
     plt.ylabel("Similarity",fontsize=24)
-    plt.title("Similarity of BP and TP by Precision Ratio",fontsize=26)
+    plt.title("Similarity of BP and TP by precision ratio",fontsize=26)
     plt.xticks(fontsize=24)
     plt.yticks(fontsize=24)
     plt.legend(fontsize=25)
@@ -494,12 +494,12 @@ def nonlinear_equilibrium_angles_diffs(learning_rate =0.1, weight_var = 0.5, act
 
     x2s = np.array(x2s)[:,:,0]
     if plot_graphs:
-        plot_line_graph(Fs, title="Free Energy of the Network", xlabel="Timestep", ylabel="Free Energy",label="Free-Energy",sname="figures/nonlinear_equilibrium_angle_diffs_Fs_2")
-        plot_line_graph(x2s, title="Activities Converging to Precision Equilibrium",xlabel="Timestep", ylabel="Activity Value",sname="figures/nonlinear_equilibrium_angle_diffs_activities_2")
-        plot_line_graph(FP_angles, title="Angle to Initial Forward Pass During Convergence to Equilibrium", xlabel="Timestep", ylabel="Similarity",label="Similarity Forward Pass",sname="figures/nonlinear_equilibrium_angle_diffs_FP_angles_2")
-        plot_line_graph(TP_angles, title="Angle to Target-Prop Targets During Convergence to Equilibrium", xlabel="Timestep", ylabel="Similarity",label="Similarity to Target",sname="figures/nonlinear_equilibrium_angle_diffs_TP_angles_2")
-        plot_line_graph(FP_diffs, title="Total Euclidean Distance to Feedforward Pass Activities During Convergence to Equilibrium", xlabel="Timestep",ylabel="Total Distance",label="Distance",sname="figures/nonlinear_equilibrium_angle_diffs_FP_diffs_2")
-        plot_line_graph(TP_diffs, title="Total Euclidean Distance to Target-Prop Targets During Convergence to Equilibrium", xlabel="Timestep", ylabel="Total Distance", label="Distance",sname="figures/nonlinear_equilibrium_angle_diffs_TP_diffs_2")
+        plot_line_graph(Fs, title="Free energy of the network", xlabel="Timestep", ylabel="Free energy",label="Free-energy",sname="figures/nonlinear_equilibrium_angle_diffs_Fs_2")
+        plot_line_graph(x2s, title="Activities converging to precision equilibrium",xlabel="Timestep", ylabel="Activity value",sname="figures/nonlinear_equilibrium_angle_diffs_activities_2")
+        plot_line_graph(FP_angles, title="Angle to initial forward pass during convergence to equilibrium", xlabel="Timestep", ylabel="Similarity",label="Similarity Forward Pass",sname="figures/nonlinear_equilibrium_angle_diffs_FP_angles_2")
+        plot_line_graph(TP_angles, title="Angle to target-prop targets during convergence to equilibrium", xlabel="Timestep", ylabel="Similarity",label="Similarity to Target",sname="figures/nonlinear_equilibrium_angle_diffs_TP_angles_2")
+        plot_line_graph(FP_diffs, title="Total euclidean distance to feedforward pass activities during convergence to equilibrium", xlabel="Timestep",ylabel="Total Distance",label="Distance",sname="figures/nonlinear_equilibrium_angle_diffs_FP_diffs_2")
+        plot_line_graph(TP_diffs, title="Total euclidean distance to target-prop targets during convergence to equilibrium", xlabel="Timestep", ylabel="Total Distance", label="Distance",sname="figures/nonlinear_equilibrium_angle_diffs_TP_diffs_2")
     return FP_angles, BP_angles, TP_angles, FP_diffs, BP_diffs, TP_diffs
 
 def multiple_networks_nonlinear_angles(N_trials,sname="nonlinear_multinet_bp_tp_inference_evolution", save_format="png",learning_rate =0.1, weight_var = 0.05, activity_var = 1, dim =5):
@@ -583,17 +583,17 @@ def high_precision_ratio_nonlinear(pi2_scale=1, pi2_var=1, pi3_scale=5,pi3_var=1
             Fs.append(torch.sum(torch.square(e2)) + torch.sum(torch.square(e3)))
             x2s.append(deepcopy(x2.numpy()))
 
-    plot_line_graph(Fs, title="Free Energy of the Network", xlabel="Timestep", ylabel="Free Energy",label="Free-Energy",sname="figures/high_precision_ratio_nonlinear_Fs")
+    plot_line_graph(Fs, title="Free energy of the network", xlabel="Timestep", ylabel="Free energy",label="Free-energy",sname="figures/high_precision_ratio_nonlinear_Fs")
     x2s = np.array(x2s)[:,:,0]
     diffs_FP = np.array(diffs_FP)[:,:,0]
     diffs_TP = np.array(diffs_TP)[:,:,0]
-    plot_equilibrium_graph(x2s,pred_eq, title="Activities Converging to Precision Equilibrium",xlabel="Timestep", ylabel="Activity Value",sname="figures/high_precision_ratio_nonlinear_activities")
-    plot_line_graph(FP_angles, title="Angle to Initial Forward Pass During Convergence to Equilibrium", xlabel="Timestep", ylabel="Angle",label="Angle to Forward Pass",sname="figures/high_precision_ratio_nonlinear_FP_angles")
-    plot_line_graph(TP_angles, title="Angle to Target-Prop Targets During Convergence to Equilibrium", xlabel="Timestep", ylabel="Angle",label="Angle to Target",sname="figures/high_precision_ratio_nonlinear_TP_angles")
+    plot_equilibrium_graph(x2s,pred_eq, title="Activities converging to precision equilibrium",xlabel="Timestep", ylabel="Activity balue",sname="figures/high_precision_ratio_nonlinear_activities")
+    plot_line_graph(FP_angles, title="Angle to initial forward pass during convergence to equilibrium", xlabel="Timestep", ylabel="Angle",label="Angle to forward pass",sname="figures/high_precision_ratio_nonlinear_FP_angles")
+    plot_line_graph(TP_angles, title="Angle to target-prop targets during convergence to equilibrium", xlabel="Timestep", ylabel="Angle",label="Angle to target",sname="figures/high_precision_ratio_nonlinear_TP_angles")
     total_diffs_FP = np.sum(np.square(diffs_FP), axis=1)
     total_diffs_TP = np.sum(np.square(diffs_TP), axis=1)   
-    plot_line_graph(total_diffs_FP, title="Total Euclidean Distance to Feedforward Pass Activities During Convergence to Equilibrium", xlabel="Timestep",ylabel="Total Distance",label="Distance",sname="figures/high_precision_ratio_nonlinear_FP_total_diffs")
-    plot_line_graph(total_diffs_TP, title="Total Euclidean Distance to Target-Prop Targets During Convergence to Equilibrium", xlabel="Timestep", ylabel="Total Distance", label="Distance",sname="figures/high_precision_ratio_nonlinear_TP_total_diffs")
+    plot_line_graph(total_diffs_FP, title="Total euclidean distance to feedforward pass activities during convergence to equilibrium", xlabel="Timestep",ylabel="Total distance",label="Distance",sname="figures/high_precision_ratio_nonlinear_FP_total_diffs")
+    plot_line_graph(total_diffs_TP, title="Total euclidean distance to target-prop targets during convergence to equilibrium", xlabel="Timestep", ylabel="Total distance", label="Distance",sname="figures/high_precision_ratio_nonlinear_TP_total_diffs")
 
 
 def low_precision_ratio_nonlinear(pi2_scale=10, pi2_var=1, pi3_scale=1,pi3_var=1,learning_rate = 0.05, weight_var = 1, activity_var = 1, dim=5):
@@ -639,20 +639,20 @@ def low_precision_ratio_nonlinear(pi2_scale=10, pi2_var=1, pi3_scale=1,pi3_var=1
             x2s.append(deepcopy(x2.numpy()))
             BP_diffs.append(deepcopy(e2.numpy()) - BP_e2.numpy())
 
-    plot_line_graph(Fs, title="Free Energy of the Network", xlabel="Timestep", ylabel="Free Energy",label="Free-Energy",sname="figures/low_precision_ratio_nonlinear_Fs")
+    plot_line_graph(Fs, title="Free Energy of the Network", xlabel="Timestep", ylabel="Free energy",label="Free-energy",sname="figures/low_precision_ratio_nonlinear_Fs")
     x2s = np.array(x2s)[:,:,0]
     diffs_FP = np.array(diffs_FP)[:,:,0]
     diffs_TP = np.array(diffs_TP)[:,:,0]
-    plot_equilibrium_graph(x2s,pred_eq, title="Activities Converging to Precision Equilibrium",xlabel="Timestep", ylabel="Activity Value",sname="figures/low_precision_ratio_nonlinear_activities")
-    plot_line_graph(FP_angles, title="Angle to Initial Forward Pass During Convergence to Equilibrium", xlabel="Timestep", ylabel="Angle",label="Angle to Forward Pass",sname="figures/low_precision_ratio_nonlinear_FP_angles")
-    plot_line_graph(TP_angles, title="Angle to TP Targets During Convergence to Equilibrium", xlabel="Timestep", ylabel="Angle",label="Angle to Target",sname="figures/low_precision_ratio_nonlinear_TP_angles")
+    plot_equilibrium_graph(x2s,pred_eq, title="Activities converging to precision equilibrium",xlabel="Timestep", ylabel="Activity value",sname="figures/low_precision_ratio_nonlinear_activities")
+    plot_line_graph(FP_angles, title="Angle to initial dorward pass during convergence to equilibrium", xlabel="Timestep", ylabel="Angle",label="Angle to forward pass",sname="figures/low_precision_ratio_nonlinear_FP_angles")
+    plot_line_graph(TP_angles, title="Angle to TP targets during convergence to equilibrium", xlabel="Timestep", ylabel="Angle",label="Angle to target",sname="figures/low_precision_ratio_nonlinear_TP_angles")
     total_diffs_FP = np.sum(np.square(diffs_FP), axis=1)
     total_diffs_TP = np.sum(np.square(diffs_TP), axis=1)   
-    plot_line_graph(total_diffs_FP, title="Total Euclidean Distance to FF Activities During Convergence to Equilibrium", xlabel="Timestep",ylabel="Total Distance",label="Distance",sname="figures/low_precision_ratio_nonlinear_FP_total_diffs")
-    plot_line_graph(total_diffs_TP, title="Total Euclidean Distance to TP Targets During Convergence to Equilibrium", xlabel="Timestep", ylabel="Total Distance", label="Distance",sname="figures/low_precision_ratio_nonlinear_TP_total_diffs")
+    plot_line_graph(total_diffs_FP, title="Total euclidean distance to FF activities during convergence to equilibrium", xlabel="Timestep",ylabel="Total distance",label="Distance",sname="figures/low_precision_ratio_nonlinear_FP_total_diffs")
+    plot_line_graph(total_diffs_TP, title="Total euclidean distance to TP targets during convergence to equilibrium", xlabel="Timestep", ylabel="Total distance", label="Distance",sname="figures/low_precision_ratio_nonlinear_TP_total_diffs")
     BP_diffs = np.array(BP_diffs)[:,:,0]
     total_BP_diffs = np.sum(np.square(BP_diffs),axis=1)
-    plot_line_graph(total_BP_diffs, title="Total Euclidean Distance of Prediction Errors to Backprop Gradients",xlabel="Timestep", ylabel="Total Distance", label="Distance",sname="figures/low_precision_ratio_nonlinear_BP_total_diffs")
+    plot_line_graph(total_BP_diffs, title="Total euclidean distance of prediction errors to backprop gradients",xlabel="Timestep", ylabel="Total distance", label="Distance",sname="figures/low_precision_ratio_nonlinear_BP_total_diffs")
 
 if __name__ == '__main__':
     precision_ratios = [0.00001,0.0001,0.0003,0.0006,0.001,0.003,0.006,0.01,0.02,0.05,0.07,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]#,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2,2.2,2.5,2.7,3.0]
